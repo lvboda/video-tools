@@ -12,7 +12,7 @@ web端视频处理工具，支持视频格式转换、视频剪辑等。
 - [x] 音视频压缩
 - [x] 音视频剪辑
 - [x] 音视频合并
-- [x] 高级功能
+- [x] FFmpeg原生功能
 
 ## 开发
 ### 目录结构
@@ -33,7 +33,7 @@ web端视频处理工具，支持视频格式转换、视频剪辑等。
 ```
 
 ### 技术选型
-ts + vite + jquery + bootstrap + ffmpeg
+ts + vite + jquery + bootstrap + FFmpeg
 
 ### 本地运行
 ``` bash
@@ -50,7 +50,7 @@ npm run build
 ```
 
 ### 开发思路
-使用ffmpeg的WebAssembly库实现在浏览器内调用ffmpeg.wasm，在面对大文件处理任务时，能免去网络传输成本，从而达到网页端高性能。
+使用 `FFmpeg` 的 `WebAssembly` 库实现在浏览器内调用 `FFmpeg.wasm`，在面对大文件处理任务时，能免去网络传输成本，从而达到网页端高性能。
 
 详细请查看文章。
 
