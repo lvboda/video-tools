@@ -49,7 +49,7 @@ npm run build
 ```
 
 ### Idea
-Using `ffmpeg` `WebAssembly` library implementation in the browser to call `ffmpeg.wasm`, in the face of large file processing tasks, can be free of network transmission costs, so as to achieve high performance on the web side.
+Using `FFmpeg` `WebAssembly` library implementation in the browser to call `FFmpeg.wasm`, in the face of large file processing tasks, can be free of network transmission costs, so as to achieve high performance on the web side.
 
 See article for details.
 
