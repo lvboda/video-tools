@@ -1,5 +1,5 @@
 # video-tools
-A web side video processing tool, including video format conversion, video clip support.
+A web side video processing tool that supports audio/video format conversion and audio/video editing.
 
 **English** **|** [**简体中文**](./README.zh-cn.md)
 
