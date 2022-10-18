@@ -1,0 +1,14 @@
+{
+    // "include": [
+    //   "env.d.ts",
+    // ],
+    "compilerOptions": {
+      "baseUrl": ".",
+      "esModuleInterop": true,
+      "isolatedModules": true,
+      "paths": {
+        "@/*": ["./src/*"]
+      },
+    }
+}
+  

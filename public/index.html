@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script type="module" src="../src/main.ts" defer></script>
+    <title>video-tools</title>
+    <style>
+      html,
+      body {
+        margin: 0;
+        width: 100%;
+        height: 100%;
+      }
+      body {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
+    </style>
+  </head>
+  <body>
+    <h3>欢迎使用视频处理工具</h3>
+    <video id="video" controls></video><br />
+    选择需要处理的视频: <input type="file" id="upload" /> 
+    选择处理类型:
+    <select aria-label="Default select example" id="operate-type">
+      <option selected value="0">格式转换</option>
+    </select>
+    输入要转换的格式(默认为mp4): <input id="suffix" type="text">
+    <button id="button">开始</button>
+    <a id="download" style="display: none;">下载</a>
+    <p id="message"></p>
+  </body>
+</html>
