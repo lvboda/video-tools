@@ -1,30 +1,43 @@
 import $ from "jquery";
-import 'bootstrap/dist/js/bootstrap.min.js'
+import "bootstrap/dist/js/bootstrap.min";
 
-import { loadFFmpeg, dispatchOperate } from "@/utils/ffmpeg";
-import { pushLog } from "@/utils/log";
+import { OPERATE_TYPE, loadFFmpeg, dispatchOperate } from "@/utils/ffmpeg";
+import { LOG_TYPE, pushLog } from "@/utils/log";
+import { currentInvokeError } from "@/utils/invoke-with-error-handler";
 
-var operateType = 0;
-
-const videoEl = $("#video");
-const uploadEl = $("#upload");
-const suffixEl = $("#suffix");
-const buttonEl = $("#button");
 const downloadEl = $("#download");
+const formatConvertForm = $("#format-convert-form");
 
-buttonEl.on("click", async () => {
-    const file = uploadEl.prop('files')[0];
-    const suffix = suffixEl.val()
-    if (!file) {
-        pushLog("请选择要处理的文件!");
-        return;
-    }
-    pushLog("文件处理中, 请稍后...");
-    const href = await dispatchOperate(operateType, file, suffix);
-    downloadEl.attr("href", href);
-    downloadEl.attr("download", `test.${suffix}`);
-    downloadEl.show();
-    pushLog("文件处理完成!");
+formatConvertForm.on("submit", function(e) {
+    e.preventDefault();
+
+    const data = formatConvertForm.serializeArray().reduce<any>((baseObj, obj) => ({ ...baseObj, [obj.name]: obj.value }), {});
+
+    let fileInput = $("<input>", { type: "file" })
+        .trigger("click")
+        .on("change", async function() {
+            const file = fileInput.prop("files")[0];
+            if (!file) {
+                fileInput = null;
+                return;
+            };
+
+            pushLog("文件处理中, 请稍后...");
+            const href = await dispatchOperate(OPERATE_TYPE.FORMAT_CONVERT, file, data.formatSuffix);
+            if (currentInvokeError) {
+                pushLog("处理过程中发生错误，请检查您的操作是否有误，错误信息如下", LOG_TYPE.ERROR);
+                pushLog(currentInvokeError.message, LOG_TYPE.ERROR);
+                fileInput = null;
+                return
+            }
+        
+            downloadEl.attr("href", href);
+            downloadEl.attr("download", `test.${data.formatSuffix}`);
+            downloadEl.show();
+            pushLog("文件处理完成!");
+
+            fileInput = null;
+        });
 });
 
 async function bootstrap() {

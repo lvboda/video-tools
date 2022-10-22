@@ -12,10 +12,10 @@ export function pushLog(msg: string, type?: LOG_TYPE) {
     const content = $(`<span>${msg}</span>`);
     if (type === LOG_TYPE.ERROR) content.css("color", "red");
     dom.append(content);
-    $("#log").append(dom);
-    $('#log').scrollTop($('#log').prop("scrollHeight"));
+    $("#log-box").append(dom);
+    $('#log-box').scrollTop($('#log-box').prop("scrollHeight"));
 }
 
 export function clearLog() {
-    $("#log").val("");
+    $("#log-box").val("");
 }

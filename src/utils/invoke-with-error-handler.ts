@@ -1,12 +1,12 @@
-import { LOG_TYPE, pushLog } from "@/utils/log";
+export let currentInvokeError: null | Error  = null;
 
 async function invokeWithErrorHandler(cb: Function, args: any[]) {
+    currentInvokeError = null;
     let res = null;
     try {
        res = await cb?.(...args);
     } catch(err) {
-        pushLog("处理过程中发生错误，请检查您的操作是否有误，错误信息如下", LOG_TYPE.ERROR);
-        pushLog(err, LOG_TYPE.ERROR);
+        currentInvokeError = err;
     }
     return res;
 }
