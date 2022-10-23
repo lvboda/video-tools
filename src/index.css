@@ -12,6 +12,32 @@ body {
   align-items: center;
 }
 
+#loading {
+  width: 50px;
+  height: 50px;
+  position: absolute;
+  top: calc(50% - 15px);
+  left: calc(50% - 25px);
+  border: 4px solid var(--bs-link-color);
+  border-top-color: transparent;
+  border-radius: 100%;
+
+  animation: circle infinite 0.75s linear;
+}
+
+@keyframes circle {
+  0% {
+    transform: rotate(0);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.tab-content {
+  display: none;
+}
+
 .col-form-label {
   text-align: center;
   color: var(--bs-link-color);
@@ -43,4 +69,8 @@ body {
 
 #download {
   display: none;
+}
+
+#format-convert [name$='content'] {
+  opacity: .4;
 }

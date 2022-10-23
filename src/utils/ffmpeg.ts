@@ -1,50 +1,53 @@
+import { LOG_TYPE, pushLog } from "@/utils/log";
 import { createFFmpeg, fetchFile } from "@ffmpeg/ffmpeg";
 
-import createURL from '@/utils/create-URL';
-import invokeWithErrorHandler from "@/utils/invoke-with-error-handler";
+import createURL from "@/utils/create-URL";
+import { invokeWithErrorHandler, panic } from "@/utils/error";
+import { genFFmpegParams } from "@/utils/ffmpeg-params";
 
 import type { FFmpeg } from "@ffmpeg/ffmpeg";
+import type { FormatConvertParams } from "@/utils/ffmpeg-params";
 
 let ffmpeg: null | FFmpeg = null;
+let preProgress = 0;
 
-export enum OPERATE_TYPE {
-    FORMAT_CONVERT = 0
-}
-
-const operateMap = new Map<OPERATE_TYPE, (...params: any) => any>();
-
-function registerOperate() {
-    operateMap.set(OPERATE_TYPE.FORMAT_CONVERT, formatConvert);
-}
-registerOperate();
-
-async function formatConvert(suffix: string) {
-    suffix = suffix.trim();
-    if (!suffix) suffix = "mp4";
-    await ffmpeg.run(
-        "-i",
-        "input",
-        "-c:v",
-        "copy",
-        "-c:a",
-        "copy",
-        `output.${suffix}`
-      );
-    const buffer = ffmpeg.FS("readFile", `output.${suffix}`).buffer;
-
-    return createURL(buffer, `video/${suffix}`);
+export function unlink(...fileNames: string[]) {
+    fileNames.forEach((fileName) => ffmpeg.FS("unlink", fileName));
 }
 
 export async function loadFFmpeg() {
-    if (!ffmpeg) ffmpeg = createFFmpeg({ log: true });
-    if (!ffmpeg.isLoaded()) await ffmpeg.load();
+    async function fn() {
+        if (!ffmpeg) ffmpeg = createFFmpeg({ corePath: "/ffmpeg-core.js" });
+        if (!ffmpeg.isLoaded()) await ffmpeg.load();
 
-    return ffmpeg;
+        ffmpeg.setProgress(function ({ ratio }) {
+            const progress = ratio * 100;
+            if (progress > preProgress + 1) {
+                preProgress = progress;
+                pushLog(`处理进度: ${parseInt(progress.toString())}%`)
+            } else if (progress >= 100) preProgress = 0;
+        });
+
+        ffmpeg.setLogger(({ message }) => {
+            if ((message as any) instanceof Error) panic(message, () => unlink("input"));
+        });
+    }
+
+    await invokeWithErrorHandler(fn);
 }
 
-export async function dispatchOperate(oType: OPERATE_TYPE, file: File, ...params: any) {
-    return await invokeWithErrorHandler(async () => {
+async function runFFmpeg(ffmpegParams: string[]) {
+    await ffmpeg.run(...ffmpegParams);
+}
+
+export async function formatConvert(file: File, data: FormatConvertParams) {
+    async function fn() {
         ffmpeg.FS("writeFile", "input", await fetchFile(file));
-        return operateMap.get(oType)?.(...params);
-    }, [ oType, file, ...params ]);
+
+        await runFFmpeg(genFFmpegParams(data));
+    
+        return createURL(ffmpeg.FS("readFile", `output.${data.formatSuffix}`), `${data.formatType}/${data.formatSuffix}`);
+    }
+
+    return await invokeWithErrorHandler(fn, file, data);
 }
