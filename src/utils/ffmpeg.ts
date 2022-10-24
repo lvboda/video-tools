@@ -9,7 +9,6 @@ import type { FFmpeg } from "@ffmpeg/ffmpeg";
 import type { FormatConvertParams } from "@/utils/ffmpeg-params";
 
 let ffmpeg: null | FFmpeg = null;
-let preProgress = 0;
 
 export function unlink(...fileNames: string[]) {
     fileNames.forEach((fileName) => ffmpeg.FS("unlink", fileName));
@@ -20,16 +19,19 @@ export async function loadFFmpeg() {
         if (!ffmpeg) ffmpeg = createFFmpeg({ corePath: "/ffmpeg-core.js" });
         if (!ffmpeg.isLoaded()) await ffmpeg.load();
 
-        ffmpeg.setProgress(function ({ ratio }) {
-            const progress = ratio * 100;
-            if (progress > preProgress + 1) {
-                preProgress = progress;
-                pushLog(`处理进度: ${parseInt(progress.toString())}%`)
-            } else if (progress >= 100) preProgress = 0;
-        });
+        ffmpeg.setProgress((() => {
+            let preProgress = 0;
+            return ({ ratio }) => {
+                const progress = ratio * 100;
+                if (progress > preProgress + 1) {
+                    preProgress = progress;
+                    pushLog(`处理进度: ${parseInt(progress.toString())}%`)
+                } else if (progress >= 100) preProgress = 0;
+            }
+        })());
 
         ffmpeg.setLogger(({ message }) => {
-            if ((message as any) instanceof Error) panic(message, () => unlink("input"));
+            if ((message as any) instanceof Error) panic(message);
         });
     }
 

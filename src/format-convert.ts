@@ -13,14 +13,22 @@ function initFormatConvertDOM($: JQueryStatic) {
     }
 
     function onFormatTypeChange() {
-        if ($(this).val() === "video") formatConvertFormEl.children("[name='zoom-content']").show();
-        if ($(this).val() === "audio") formatConvertFormEl.children("[name='zoom-content']").hide().find("[name='isZoom']").prop("checked", false).trigger("change");
+        if ($(this).val() === "video") {
+            formatConvertFormEl.children("[name='zoom-content']").show();
+            formatConvertFormEl.find("[name='encode']").removeAttr("name").hide().siblings(":hidden").attr("name", "encode").show();
+        }
+        if ($(this).val() === "audio") {
+            formatConvertFormEl.children("[name='zoom-content']").hide().find("[name='isZoom']").prop("checked", false).trigger("change");
+            formatConvertFormEl.find("[name='encode']").removeAttr("name").hide().siblings(":hidden").attr("name", "encode").show();
+        }
     }
 
     function onFormatConvertFormSubmit(e: JQuery.SubmitEvent<HTMLElement, undefined, HTMLElement, HTMLElement>) {
         e.preventDefault();
 
         const data = toFormatConvertParams(formatConvertFormEl.serializeArray());
+
+        pushLog(JSON.stringify(data));
 
         let fileInput = $("<input>", { type: "file" })
             .trigger("click")

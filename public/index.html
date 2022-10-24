@@ -53,7 +53,7 @@
             <form id="format-convert-form">
               <div class="row mb-2 align-items-center">
                 <div class="col-sm-1"></div>
-                <label class="col-sm-2 col-form-label">格式</label>
+                <label class="col-sm-2 col-form-label">格式:</label>
                 <div class="col-sm-5">
                   <div class="form-check form-check-inline">
                     <input
@@ -94,15 +94,27 @@
                       class="form-check-input"
                       type="checkbox"
                       name="isEncode"
+                      value="1"
                     />
                   </div>
                 </div>
-                <label class="col-sm-2 col-form-label">编码</label>
+                <label class="col-sm-2 col-form-label">编码:</label>
                 <div class="col-sm-6">
                   <select class="form-select" name="encode" disabled>
-                    <option selected>H264</option>
-                    <option value="1">H265</option>
-                    </select>
+                    <option value="H264" selected>H264</option>
+                    <option value="H265">H265</option>
+                    <option value="VP8">VP8</option>
+                    <option value="Theora">Theora</option>
+                    <option value="aom">aom</option>
+                  </select>
+                  <select class="form-select" disabled style="display: none;">
+                    <option value="wavpack" selected>wavpack</option>
+                    <option value="lame">lame</option>
+                    <option value="fdk-aac">fdk-aac</option>
+                    <option value="ogg">ogg</option>
+                    <option value="vorbis">vorbis</option>
+                    <option value="opus">opus</option>
+                  </select>
                 </div>
               </div>
 
@@ -117,7 +129,7 @@
                     />
                   </div>
                 </div>
-                <label class="col-sm-2 col-form-label">质量</label>
+                <label class="col-sm-2 col-form-label">质量:</label>
                 <div class="col-sm-9">
                   <div class="form-check form-check-inline">
                     <input
@@ -174,7 +186,7 @@
                     />
                   </div>
                 </div>
-                <label class="col-sm-2 col-form-label">压缩</label>
+                <label class="col-sm-2 col-form-label">压缩:</label>
                 <div class="col-sm-6">
                   <div class="input-group input-group-sm">
                     <input
@@ -200,7 +212,7 @@
                     />
                   </div>
                 </div>
-                <label class="col-sm-2 col-form-label">缩放</label>
+                <label class="col-sm-2 col-form-label">缩放:</label>
                 <div class="col-sm-6">
                   <div class="input-group input-group-sm">
                     <input
@@ -229,12 +241,8 @@
               </div>
             </form>
           </div>
-          <div id="clip-merge" class="tab-pane">
-            ...
-          </div>
-          <div id="other" class="tab-pane">
-            ...
-          </div>
+          <div id="clip-merge" class="tab-pane">...</div>
+          <div id="other" class="tab-pane">...</div>
         </div>
       </div>
     </div>

@@ -19,6 +19,8 @@ export type FormatConvertParams = {
     formatType: "video" | "audio";
     formatSuffix: string;
     quality: "default" | "50" | "25" | "0";
+    isEncode?: "1",
+    encode?: string,
     isCompress?: "1";
     compressSize?: number;
     isZoom?: "1";
