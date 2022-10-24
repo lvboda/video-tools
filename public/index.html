@@ -101,16 +101,17 @@
                 <label class="col-sm-2 col-form-label">编码:</label>
                 <div class="col-sm-6">
                   <select class="form-select" name="encode" disabled>
-                    <option value="H264" selected>H264</option>
-                    <option value="H265">H265</option>
-                    <option value="VP8">VP8</option>
+                    <option value="libx264" selected>H264</option>
+                    <option value="libx265">H265</option>
+                    <option value="vp8">VP8</option>
+                    <option value="vp9">VP9</option>
                     <option value="Theora">Theora</option>
                     <option value="aom">aom</option>
                   </select>
                   <select class="form-select" disabled style="display: none;">
                     <option value="wavpack" selected>wavpack</option>
-                    <option value="lame">lame</option>
-                    <option value="fdk-aac">fdk-aac</option>
+                    <option value="libmp3lame">lame</option>
+                    <option value="aac">aac</option>
                     <option value="ogg">ogg</option>
                     <option value="vorbis">vorbis</option>
                     <option value="opus">opus</option>
@@ -167,7 +168,7 @@
                       class="form-check-input"
                       type="radio"
                       name="quality"
-                      value="0"
+                      value="20"
                       disabled
                     />
                     <label class="form-check-label">高</label>

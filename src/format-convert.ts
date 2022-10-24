@@ -28,8 +28,6 @@ function initFormatConvertDOM($: JQueryStatic) {
 
         const data = toFormatConvertParams(formatConvertFormEl.serializeArray());
 
-        pushLog(JSON.stringify(data));
-
         let fileInput = $("<input>", { type: "file" })
             .trigger("click")
             .on("change", async function () {

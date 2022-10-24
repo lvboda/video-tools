@@ -23,14 +23,19 @@ export async function loadFFmpeg() {
             let preProgress = 0;
             return ({ ratio }) => {
                 const progress = ratio * 100;
-                if (progress > preProgress + 1) {
+                if (Math.ceil(progress) >= 100) {
+                    if (preProgress) pushLog(`处理进度: ${parseInt(progress.toString())}%`)
+                    preProgress = 0;
+                    return;
+                } else if (progress > preProgress + 1) {
                     preProgress = progress;
                     pushLog(`处理进度: ${parseInt(progress.toString())}%`)
-                } else if (progress >= 100) preProgress = 0;
+                }
             }
         })());
 
         ffmpeg.setLogger(({ message }) => {
+            console.log(message);
             if ((message as any) instanceof Error) panic(message);
         });
     }
