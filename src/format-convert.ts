@@ -13,7 +13,8 @@ function initFormatConvertDOM($: JQueryStatic) {
 
     function onFormatTypeChange() {
         if ($(this).val() === "video") {
-            formatConvertFormEl.children("[name='zoom-content']").show();
+            formatConvertFormEl.find("[name='isEncode']").trigger("change");
+            // formatConvertFormEl.children("[name='zoom-content']").show();
             formatConvertFormEl.find("[name='encode']").removeAttr("name").hide().siblings(":hidden").attr("name", "encode").show();
             formatConvertFormEl.find("[name='fps']").parents(".col-sm-3").show();
         }
