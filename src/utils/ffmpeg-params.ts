@@ -7,7 +7,8 @@ export function genFFmpegParams(formatConvertParams: FormatConvertParams): strin
         isQuality,
         quality,
         isCompress,
-        compressSize,
+        fps,
+        bps,
         isZoom,
         zoomX,
         zoomY
@@ -16,27 +17,23 @@ export function genFFmpegParams(formatConvertParams: FormatConvertParams): strin
     const ffmpegParams = ["-i", "input"];
 
     if (formatType === "video") {
-        ffmpegParams.push("-c:a", "copy");
+        if (encode !== "libvpx" && encode !== "libvpx-vp9" && encode !== "libtheora") ffmpegParams.push("-c:a", "copy");
 
         if (isEncode) {
             ffmpegParams.push("-c:v", encode);
             if (encode === "libx265") ffmpegParams.push("-pix_fmt", "yuv420p10le");
             if (isQuality && quality !== "default") ffmpegParams.push("-crf", quality);
-            if (isCompress && Number(compressSize)) ffmpegParams.push("-fs", `${compressSize}MB`);
+            if (isCompress && Number(fps)) ffmpegParams.push("-r", fps);
+            if (isCompress && bps) ffmpegParams.push("-b:v", bps);
             if (isZoom && Number(zoomX) && Number(zoomY)) ffmpegParams.push("-s", `${zoomX}*${zoomY}`);
             ffmpegParams.push("-preset", "superfast");
         } else ffmpegParams.push("-c:v", "copy");
-
-        if (encode === "libx265") ffmpegParams.push("-pix_fmt", "yuv420p10le");
-            if (isQuality && quality !== "default") ffmpegParams.push("-crf", quality);
-            if (isCompress && Number(compressSize)) ffmpegParams.push("-fs", `${compressSize}MB`);
-            if (isZoom && Number(zoomX) && Number(zoomY)) ffmpegParams.push("-s", `${zoomX}*${zoomY}`);
 
     } else if (formatType === "audio") {
         if (isEncode) {
             ffmpegParams.push("-c:a", encode);
             if (isQuality && quality !== "default") ffmpegParams.push("-crf", quality);
-            if (isCompress && Number(compressSize)) ffmpegParams.push("-fs", compressSize);
+            if (isCompress && bps) ffmpegParams.push("-b:a", bps);
             ffmpegParams.push("-preset", "superfast");
         }
     }
@@ -53,7 +50,8 @@ export type FormatConvertParams = {
     isQuality?: "1";
     quality?: "default" | "50" | "25" | "0";
     isCompress?: "1";
-    compressSize?: string;
+    fps?: string;
+    bps?: string;
     isZoom?: "1";
     zoomX?: string;
     zoomY?: string;

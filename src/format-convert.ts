@@ -4,23 +4,29 @@ import { currentInvokeError } from "@/utils/error";
 import { toFormatConvertParams } from "@/utils/ffmpeg-params";
 
 function initFormatConvertDOM($: JQueryStatic) {
-    const downloadEl = $("#download");
     const formatConvertFormEl = $("#format-convert-form");
 
     function onCheckBoxChange() {
-        if (!$(this).prop('checked')) $(this).closest("[name$='content']").css("opacity", ".4").find("input:not(:first),select").attr("disabled", "disabled");
-        if ($(this).prop('checked')) $(this).closest("[name$='content']").css("opacity", "1").find("input:not(:first),select").removeAttr("disabled");
+        if (!$(this).prop("checked")) $(this).closest("[name$='content']").css("opacity", ".4").find("input:not(:first),select").attr("disabled", "disabled");
+        if ($(this).prop("checked")) $(this).closest("[name$='content']").css("opacity", "1").find("input:not(:first),select").removeAttr("disabled");
     }
 
     function onFormatTypeChange() {
         if ($(this).val() === "video") {
             formatConvertFormEl.children("[name='zoom-content']").show();
             formatConvertFormEl.find("[name='encode']").removeAttr("name").hide().siblings(":hidden").attr("name", "encode").show();
+            formatConvertFormEl.find("[name='fps']").parents(".col-sm-3").show();
         }
         if ($(this).val() === "audio") {
             formatConvertFormEl.children("[name='zoom-content']").hide().find("[name='isZoom']").prop("checked", false).trigger("change");
             formatConvertFormEl.find("[name='encode']").removeAttr("name").hide().siblings(":hidden").attr("name", "encode").show();
+            formatConvertFormEl.find("[name='fps']").parents(".col-sm-3").hide();
         }
+    }
+
+    function onIsEncodeChange() {
+        if (!$(this).prop("checked")) formatConvertFormEl.children("[name$='content']:not(:first)").hide().find("[name^='is']").prop("checked", false).trigger("change");
+        if ($(this).prop("checked")) formatConvertFormEl.children("[name$='content']").show();
     }
 
     function onFormatConvertFormSubmit(e: JQuery.SubmitEvent<HTMLElement, undefined, HTMLElement, HTMLElement>) {
@@ -45,11 +51,7 @@ function initFormatConvertDOM($: JQueryStatic) {
                     fileInput = null;
                     return
                 }
-
-                downloadEl.attr("href", href);
-                downloadEl.attr("download", `test.${data.formatSuffix}`);
-                downloadEl.show();
-                pushLog("文件处理完成!");
+                pushLog(`文件处理完成, <a href="${href}" download="output.${data.formatSuffix}">点击下载</a>`);
 
                 fileInput = null;
             });
@@ -58,6 +60,7 @@ function initFormatConvertDOM($: JQueryStatic) {
     formatConvertFormEl.on("submit", onFormatConvertFormSubmit);
     formatConvertFormEl.find("[name^='is']").on("change", onCheckBoxChange);
     formatConvertFormEl.find("[name='formatType']").on("change", onFormatTypeChange);
+    formatConvertFormEl.find("[name='isEncode']").on("change", onIsEncodeChange);
 }
 
 export default initFormatConvertDOM;

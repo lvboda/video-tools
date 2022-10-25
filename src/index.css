@@ -3,13 +3,29 @@
 html,
 body {
   margin: 0;
-  width: 100%;
-  height: 100%;
+  width: 100vw;
+  height: 100vh;
 }
+
 body {
   display: flex;
   flex-direction: column;
   align-items: center;
+}
+
+header {
+  width: 100%;
+  height: 15%;
+  background: var(--bs-link-color);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+header > h1 {
+  color: #ffffff;
+  font-weight: 700;
+  font-family: Roboto,Helvetica Neue,Helvetica,Arial,sans-serif;
 }
 
 #loading {
@@ -34,10 +50,6 @@ body {
   }
 }
 
-.tab-content {
-  display: none;
-}
-
 .col-form-label {
   text-align: center;
   color: var(--bs-link-color);
@@ -49,7 +61,8 @@ body {
 
 .content-box {
   width: 70%;
-  min-height: 50vh;
+  min-height: 50%;
+  margin-top: 5%;
   display: flex;
   flex-direction: row;
   flex-wrap: nowrap;
@@ -65,10 +78,6 @@ body {
   margin-right: 10px;
   background: #efefef;
   overflow-y: scroll;
-}
-
-#download {
-  display: none;
 }
 
 #format-convert [name$='content'] {

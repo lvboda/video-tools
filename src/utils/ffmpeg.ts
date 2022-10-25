@@ -1,4 +1,4 @@
-import { LOG_TYPE, pushLog } from "@/utils/log";
+import { pushLog } from "@/utils/log";
 import { createFFmpeg, fetchFile } from "@ffmpeg/ffmpeg";
 
 import createURL from "@/utils/create-URL";

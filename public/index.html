@@ -9,9 +9,9 @@
     <title>video-tools</title>
   </head>
   <body>
-    <h3>欢迎使用视频处理工具</h3>
-    <video id="video" controls></video><br />
-    <a id="download">下载</a>
+    <header>
+      <h1>在线音视频处理工具</h1>
+    </header>
     <div class="content-box">
       <div id="log-box" class="card shadow p-3"></div>
       <div class="card shadow p-3">
@@ -48,7 +48,7 @@
           </li>
         </ul>
         <div id="loading"></div>
-        <div class="tab-content">
+        <div class="tab-content" style="display: none;">
           <div id="format-convert" class="tab-pane show active">
             <form id="format-convert-form">
               <div class="row mb-2 align-items-center">
@@ -75,15 +75,18 @@
                     <label class="form-check-label">音频</label>
                   </div>
                 </div>
-                <div class="col-sm-4">
-                  <input
-                    type="text"
-                    class="form-control form-control-sm"
-                    name="formatSuffix"
-                    value="mp4"
-                    oninvalid="setCustomValidity('不能为空')"
-                    required
-                  />
+                <div class="col-sm-3">
+                  <div class="input-group input-group-sm">
+                    <span class="input-group-text">.</span>
+                    <input
+                      type="text"
+                      class="form-control"
+                      name="formatSuffix"
+                      value="mp4"
+                      oninvalid="setCustomValidity('不能为空')"
+                      required
+                    />
+                  </div>
                 </div>
               </div>
 
@@ -100,26 +103,24 @@
                 </div>
                 <label class="col-sm-2 col-form-label">编码:</label>
                 <div class="col-sm-6">
-                  <select class="form-select" name="encode" disabled>
-                    <option value="libx264" selected>H264</option>
-                    <option value="libx265">H265</option>
-                    <option value="vp8">VP8</option>
-                    <option value="vp9">VP9</option>
-                    <option value="Theora">Theora</option>
-                    <option value="aom">aom</option>
+                  <select class="form-select form-select-sm" name="encode" disabled>
+                    <option value="libx264" selected>H.264(AVC) -> .mp4</option>
+                    <option value="libx265">H.265(HEVC) -> .mp4</option>
+                    <option value="libvpx">VP8 -> .webm</option>
+                    <option value="libvpx-vp9">VP9 -> .webm</option>
+                    <option value="libtheora">Theora -> .ogv</option>
                   </select>
-                  <select class="form-select" disabled style="display: none;">
-                    <option value="wavpack" selected>wavpack</option>
-                    <option value="libmp3lame">lame</option>
-                    <option value="aac">aac</option>
-                    <option value="ogg">ogg</option>
-                    <option value="vorbis">vorbis</option>
-                    <option value="opus">opus</option>
+                  <select class="form-select form-select-sm" disabled style="display: none;">
+                    <option value="libwavpack" selected>wavpack -> .wv/.wav</option>
+                    <option value="libmp3lame">lame -> .mp3</option>
+                    <option value="libfdk_aac">aac -> .aac</option>
+                    <option value="libvorbis">vorbis -> .ogg</option>
+                    <option value="libopus">opus -> .opus</option>
                   </select>
                 </div>
               </div>
 
-              <div class="row mb-2 align-items-center" name="quality-content">
+              <div class="row mb-2 align-items-center" name="quality-content" style="display: none;">
                 <div class="col-sm-1">
                   <div class="form-check form-switch">
                     <input
@@ -176,7 +177,7 @@
                 </div>
               </div>
 
-              <div class="row mb-2 align-items-center" name="compress-content">
+              <div class="row mb-2 align-items-center" name="compress-content" style="display: none;">
                 <div class="col-sm-1">
                   <div class="form-check form-switch">
                     <input
@@ -188,21 +189,32 @@
                   </div>
                 </div>
                 <label class="col-sm-2 col-form-label">压缩:</label>
-                <div class="col-sm-6">
+                <div class="col-sm-3">
                   <div class="input-group input-group-sm">
                     <input
                       type="number"
                       class="form-control"
-                      name="compressSize"
-                      value="0"
+                      name="fps"
+                      value="25"
                       disabled
                     />
-                    <span class="input-group-text">MB</span>
+                    <span class="input-group-text">fps</span>
+                  </div>
+                </div>
+                <div class="col-sm-3">
+                  <div class="input-group input-group-sm">
+                    <input
+                      class="form-control"
+                      name="bps"
+                      value="200K"
+                      disabled
+                    />
+                    <span class="input-group-text">bps</span>
                   </div>
                 </div>
               </div>
 
-              <div class="row mb-2 align-items-center" name="zoom-content">
+              <div class="row mb-2 align-items-center" name="zoom-content" style="display: none;">
                 <div class="col-sm-1">
                   <div class="form-check form-switch">
                     <input
