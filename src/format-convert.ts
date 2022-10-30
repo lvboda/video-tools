@@ -1,7 +1,8 @@
 import { formatConvert } from "@/utils/ffmpeg";
 import { LOG_TYPE, pushLog } from "@/utils/log";
-import { currentInvokeError } from "@/utils/error";
-import { toFormatConvertParams } from "@/utils/ffmpeg-params";
+import { currentInvokeErrorQueue } from "@/utils/error";
+import { toFormatConvertData } from "@/utils/ffmpeg-params";
+import createFileInput from "@/utils/create-file-input";
 
 function initFormatConvertDOM($: JQueryStatic) {
     const formatConvertFormEl = $("#format-convert-form");
@@ -12,15 +13,16 @@ function initFormatConvertDOM($: JQueryStatic) {
     }
 
     function onFormatTypeChange() {
-        if ($(this).val() === "video") {
-            formatConvertFormEl.find("[name='isEncode']").trigger("change");
-            // formatConvertFormEl.children("[name='zoom-content']").show();
-            formatConvertFormEl.find("[name='encode']").removeAttr("name").hide().siblings(":hidden").attr("name", "encode").show();
+        if ($(this).prop("checked") && $(this).val() === "video") {
+            if (formatConvertFormEl.find("[name='isEncode']").prop("checked")) formatConvertFormEl.children("[name='zoom-content']").show();
+            if (formatConvertFormEl.find("[name='isEncode']").prop("checked")) formatConvertFormEl.children("[name='quality-content']").show();
+            formatConvertFormEl.find(".video").attr("name", "encode").show().siblings(".audio").removeAttr("name").hide();
             formatConvertFormEl.find("[name='fps']").parents(".col-sm-3").show();
         }
-        if ($(this).val() === "audio") {
+        if ($(this).prop("checked") && $(this).val() === "audio") {
             formatConvertFormEl.children("[name='zoom-content']").hide().find("[name='isZoom']").prop("checked", false).trigger("change");
-            formatConvertFormEl.find("[name='encode']").removeAttr("name").hide().siblings(":hidden").attr("name", "encode").show();
+            formatConvertFormEl.children("[name='quality-content']").hide().find("[name='isQuality']").prop("checked", false).trigger("change");
+            formatConvertFormEl.find(".audio").attr("name", "encode").show().siblings(".video").removeAttr("name").hide();
             formatConvertFormEl.find("[name='fps']").parents(".col-sm-3").hide();
         }
     }
@@ -28,34 +30,30 @@ function initFormatConvertDOM($: JQueryStatic) {
     function onIsEncodeChange() {
         if (!$(this).prop("checked")) formatConvertFormEl.children("[name$='content']:not(:first)").hide().find("[name^='is']").prop("checked", false).trigger("change");
         if ($(this).prop("checked")) formatConvertFormEl.children("[name$='content']").show();
+        formatConvertFormEl.find("[name='formatType']").trigger("change");
     }
 
     function onFormatConvertFormSubmit(e: JQuery.SubmitEvent<HTMLElement, undefined, HTMLElement, HTMLElement>) {
         e.preventDefault();
 
-        const data = toFormatConvertParams(formatConvertFormEl.serializeArray());
+        const data = toFormatConvertData(formatConvertFormEl.serializeArray());
 
-        let fileInput = $("<input>", { type: "file" })
-            .trigger("click")
-            .on("change", async function () {
-                const file = fileInput.prop("files")[0];
-                if (!file) {
-                    fileInput = null;
-                    return;
-                };
+        console.log(data, 1);
 
-                pushLog("文件处理中, 请稍后...");
-                const href = await formatConvert(file, data);
-                if (currentInvokeError) {
-                    pushLog("处理过程中发生错误，请检查您的操作是否有误，错误信息如下", LOG_TYPE.ERROR);
-                    pushLog(currentInvokeError.message, LOG_TYPE.ERROR);
-                    fileInput = null;
-                    return
-                }
-                pushLog(`文件处理完成, <a href="${href}" download="output.${data.formatSuffix}">点击下载</a>`);
+        const clearFileInput = createFileInput(async (file) => {
+            pushLog("文件处理中，请稍后...");
+            console.log(file, 2);
+            const href = await formatConvert(data, [file]);
+            if (!currentInvokeErrorQueue.isEmpty()) {
+                pushLog("处理过程中发生错误，请检查您的操作是否有误，错误信息如下。", LOG_TYPE.ERROR);
+                currentInvokeErrorQueue.forEach((error) => pushLog(error.message, LOG_TYPE.ERROR));
+                clearFileInput();
+                return;
+            }
 
-                fileInput = null;
-            });
+            pushLog(`文件处理完成，<a href="${href}" download="output.${data.formatSuffix}">点击下载</a>。`);
+            clearFileInput();
+        });
     }
 
     formatConvertFormEl.on("submit", onFormatConvertFormSubmit);

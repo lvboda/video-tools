@@ -1,5 +1,5 @@
-function createURL(buffer: Uint8Array, type: string): string {
-    return URL.createObjectURL(new Blob([buffer.buffer], { type }));
+function createURL(buffer: ArrayBuffer | Blob, type?: string): string {
+    return URL.createObjectURL(new Blob([buffer], { type }));
 }
 
 export default createURL;
