@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta name="keywords" content="视频编码,音频编码,视频格式转换,音频格式转换,格式转换,编码,压缩"/>
+    <meta name="Description" content="一个纯前端的高性能在线音视频处理工具" />
+    <title>在线音视频处理工具(格式转换/编码)</title>
+    <meta name="author" content="吕博达,Boda Lü" />
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="/src/index.css" />
+    <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
+    <script type="module" src="/src/index.ts" defer></script>
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-QQKMVGE1GS"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'GA_MEASUREMENT_ID');
+    </script>
+  </head>
+  <body>
+    <header>
+      <h1>在线音视频处理工具</h1>
+    </header>
+    <div class="root">
+      <div class="content-box">
+        <div id="log-box" class="card shadow p-3"></div>
+        <div id="operate-box" class="card shadow p-3">
+          <ul class="nav nav-tabs">
+            <li class="nav-item">
+              <button
+                class="nav-link active"
+                data-bs-toggle="tab"
+                data-bs-target="#format-convert"
+                type="button"
+              >
+                格式转换
+              </button>
+            </li>
+            <li class="nav-item">
+              <button
+                class="nav-link"
+                data-bs-toggle="tab"
+                data-bs-target="#clip-merge"
+                type="button"
+              >
+                剪辑合并
+              </button>
+            </li>
+            <li class="nav-item">
+              <button
+                class="nav-link"
+                data-bs-toggle="tab"
+                data-bs-target="#advance"
+                type="button"
+              >
+                高级
+              </button>
+            </li>
+          </ul>
+          <div id="loading"></div>
+          <div class="tab-content" style="display: none">
+            <div id="format-convert" class="tab-pane show active">
+              <form id="format-convert-form">
+                <div class="row mb-2 align-items-center">
+                  <div class="col-sm-1"></div>
+                  <label class="col-sm-2 col-form-label">格式:</label>
+                  <div class="col-sm-5">
+                    <div class="form-check form-check-inline">
+                      <input
+                        class="form-check-input"
+                        type="radio"
+                        name="formatType"
+                        value="video"
+                        checked
+                      />
+                      <label class="form-check-label">视频</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                      <input
+                        class="form-check-input"
+                        type="radio"
+                        name="formatType"
+                        value="audio"
+                      />
+                      <label class="form-check-label">音频</label>
+                    </div>
+                  </div>
+                  <div class="col-sm-3">
+                    <div class="input-group input-group-sm">
+                      <span class="input-group-text">.</span>
+                      <input
+                        type="text"
+                        class="form-control"
+                        name="formatSuffix"
+                        value="mp4"
+                        placeholder="后缀"
+                        oninvalid="setCustomValidity('不能为空')"
+                        required
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                <div class="row mb-2 align-items-center" name="encode-content">
+                  <div class="col-sm-1">
+                    <div class="form-check form-switch">
+                      <input
+                        class="form-check-input"
+                        type="checkbox"
+                        name="isEncode"
+                        value="1"
+                      />
+                    </div>
+                  </div>
+                  <label class="col-sm-2 col-form-label">编码:</label>
+                  <div class="col-sm-8">
+                    <select
+                      class="form-select form-select-sm video"
+                      name="encode"
+                      disabled
+                    >
+                      <option value="libx264" selected>
+                        H.264(AVC) -> .mp4
+                      </option>
+                      <option value="libx265">H.265(HEVC) -> .mp4</option>
+                      <option value="libvpx">VP8 -> .webm</option>
+                      <option value="libvpx-vp9">VP9 -> .webm</option>
+                      <option value="libtheora">Theora -> .ogv</option>
+                    </select>
+                    <select
+                      class="form-select form-select-sm audio"
+                      disabled
+                      style="display: none"
+                    >
+                      <option value="libwavpack" selected>
+                        wavpack -> .wv/.wav
+                      </option>
+                      <option value="libmp3lame">lame -> .mp3</option>
+                      <option value="libfdk_aac">aac -> .aac</option>
+                      <option value="libvorbis">vorbis -> .ogg</option>
+                      <option value="libopus">opus -> .opus</option>
+                    </select>
+                  </div>
+                </div>
+
+                <div
+                  class="row mb-2 align-items-center"
+                  name="quality-content"
+                  style="display: none"
+                >
+                  <div class="col-sm-1">
+                    <div class="form-check form-switch">
+                      <input
+                        class="form-check-input"
+                        type="checkbox"
+                        name="isQuality"
+                        value="1"
+                      />
+                    </div>
+                  </div>
+                  <label class="col-sm-2 col-form-label">质量:</label>
+                  <div class="col-sm-9">
+                    <div class="form-check form-check-inline">
+                      <input
+                        class="form-check-input"
+                        type="radio"
+                        name="quality"
+                        value="28"
+                        disabled
+                      />
+                      <label class="form-check-label">低</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                      <input
+                        class="form-check-input"
+                        type="radio"
+                        name="quality"
+                        value="23"
+                        disabled
+                      />
+                      <label class="form-check-label">中</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                      <input
+                        class="form-check-input"
+                        type="radio"
+                        name="quality"
+                        value="18"
+                        disabled
+                      />
+                      <label class="form-check-label">高</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                      <input
+                        class="form-check-input"
+                        type="radio"
+                        name="quality"
+                        value="0"
+                        disabled
+                      />
+                      <label class="form-check-label">无损</label>
+                    </div>
+                  </div>
+                </div>
+
+                <div
+                  class="row mb-2 align-items-center"
+                  name="compress-content"
+                  style="display: none"
+                >
+                  <div class="col-sm-1">
+                    <div class="form-check form-switch">
+                      <input
+                        class="form-check-input"
+                        type="checkbox"
+                        name="isCompress"
+                        value="1"
+                      />
+                    </div>
+                  </div>
+                  <label class="col-sm-2 col-form-label">压缩:</label>
+                  <div class="col-sm-4">
+                    <div class="input-group input-group-sm">
+                      <input
+                        type="number"
+                        class="form-control"
+                        name="fps"
+                        value="25"
+                        placeholder="帧率"
+                        disabled
+                      />
+                      <span class="input-group-text">fps</span>
+                    </div>
+                  </div>
+                  <div class="col-sm-4">
+                    <div class="input-group input-group-sm">
+                      <input
+                        class="form-control"
+                        name="bps"
+                        value="200k"
+                        placeholder="码率"
+                        disabled
+                      />
+                      <span class="input-group-text">bps</span>
+                    </div>
+                  </div>
+                </div>
+
+                <div
+                  class="row mb-2 align-items-center"
+                  name="zoom-content"
+                  style="display: none"
+                >
+                  <div class="col-sm-1">
+                    <div class="form-check form-switch">
+                      <input
+                        class="form-check-input"
+                        type="checkbox"
+                        name="isZoom"
+                        value="1"
+                      />
+                    </div>
+                  </div>
+                  <label class="col-sm-2 col-form-label">分辨率:</label>
+                  <div class="col-sm-8">
+                    <div class="input-group input-group-sm">
+                      <input
+                        type="number"
+                        class="form-control"
+                        name="zoomX"
+                        value="1920"
+                        placeholder="宽"
+                        disabled
+                      />
+                      <span class="input-group-text">X</span>
+                      <input
+                        type="number"
+                        class="form-control"
+                        name="zoomY"
+                        value="1080"
+                        placeholder="高"
+                        disabled
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                <div class="row mb-2 align-items-center">
+                  <div class="d-grid">
+                    <button class="btn btn-primary" type="submit">开始</button>
+                  </div>
+                </div>
+              </form>
+            </div>
+
+            <div id="clip-merge" class="tab-pane">
+              <form id="clip-merge-form">
+                <div class="row mb-2 align-items-center">
+                  <div class="col-sm-1"></div>
+                  <label class="col-sm-2 col-form-label">类型:</label>
+                  <div class="col-sm-5">
+                    <div class="form-check form-check-inline">
+                      <input
+                        class="form-check-input"
+                        type="radio"
+                        name="type"
+                        value="clip"
+                        checked
+                      />
+                      <label class="form-check-label">剪辑</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                      <input
+                        class="form-check-input"
+                        type="radio"
+                        name="type"
+                        value="merge"
+                      />
+                      <label class="form-check-label">合并</label>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="row mb-2 align-items-center">
+                  <div class="col-sm-1"></div>
+                  <label class="col-sm-2 col-form-label">格式:</label>
+                  <div class="col-sm-5">
+                    <div class="form-check form-check-inline">
+                      <input
+                        class="form-check-input"
+                        type="radio"
+                        name="formatType"
+                        value="video"
+                        checked
+                      />
+                      <label class="form-check-label">视频</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                      <input
+                        class="form-check-input"
+                        type="radio"
+                        name="formatType"
+                        value="audio"
+                      />
+                      <label class="form-check-label">音频</label>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="row mb-2 align-items-center" name="encode-content">
+                  <div class="col-sm-1"></div>
+                  <label class="col-sm-2 col-form-label">编码:</label>
+                  <div class="col-sm-9">
+                    <div class="form-check form-check-inline">
+                      <input
+                        class="form-check-input"
+                        type="radio"
+                        name="encode"
+                        value="yes"
+                      />
+                      <label class="form-check-label">是</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                      <input
+                        class="form-check-input"
+                        type="radio"
+                        name="encode"
+                        value="no"
+                        checked
+                      />
+                      <label class="form-check-label">否</label>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="row mb-2 align-items-center" name="time-content">
+                  <div class="col-sm-1"></div>
+                  <label class="col-sm-2 col-form-label">时间:</label>
+                  <div class="col-sm-6">
+                    <div class="input-group input-group-sm">
+                      <input
+                        type="text"
+                        class="form-control"
+                        name="startTime"
+                        value="00:00:00"
+                      />
+                      <span class="input-group-text">--</span>
+                      <input
+                        type="text"
+                        class="form-control"
+                        name="endTime"
+                        value="00:00:00"
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                <div
+                  class="row mb-2 align-items-center"
+                  name="file-content1"
+                  style="display: none"
+                >
+                  <div class="col-sm-1"></div>
+                  <label class="col-sm-2 col-form-label">文件1:</label>
+                  <div class="col-sm-8">
+                    <input
+                      class="form-control form-control-sm"
+                      type="file"
+                      name="file1"
+                      title="可直接拖拽视频或音频文件到这里"
+                    />
+                  </div>
+                </div>
+
+                <div
+                  class="row mb-2 align-items-center"
+                  name="file-content2"
+                  style="display: none"
+                >
+                  <div class="col-sm-1"></div>
+                  <label class="col-sm-2 col-form-label">文件2:</label>
+                  <div class="col-sm-8">
+                    <input
+                      class="form-control form-control-sm"
+                      type="file"
+                      name="file2"
+                      title="可直接拖拽视频或音频文件到这里"
+                    />
+                  </div>
+                </div>
+
+                <div class="row mb-2 align-items-center">
+                  <div class="d-grid">
+                    <button class="btn btn-primary" type="submit">开始</button>
+                  </div>
+                </div>
+              </form>
+            </div>
+
+            <div id="advance" class="tab-pane">
+              <form id="advance-form">
+                <div class="row mb-2 align-items-center" name="upload-content">
+                  <div class="col-sm-1"></div>
+                  <div class="col-sm-10 d-grid">
+                    <button
+                      class="btn btn-secondary"
+                      name="upload"
+                      type="button"
+                    >
+                      文件上传
+                    </button>
+                  </div>
+                </div>
+
+                <div
+                  class="row mb-2 align-items-center"
+                  name="ffmpeg-args-content"
+                >
+                  <div class="col-sm-1"></div>
+                  <div class="col-sm-10">
+                    <input
+                      type="text"
+                      class="form-control form-control-sm"
+                      name="ffmpegParams"
+                      placeholder="请输入FFmpeg参数, 以空格分割"
+                    />
+                  </div>
+                </div>
+
+                <div class="row mb-2 align-items-center">
+                  <div class="d-grid">
+                    <button class="btn btn-primary" type="submit">开始</button>
+                  </div>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <footer>
+      <span>作者邮箱: lv_boda@163.com</span>
+      <a href="/wx-pay.jpg" target="_blank">打赏作者</a>
+    </footer>
+  </body>
+</html>

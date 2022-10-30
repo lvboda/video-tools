@@ -1,0 +1,167 @@
+@import "bootstrap/dist/css/bootstrap.min.css";
+
+html,
+body {
+  margin: 0;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+}
+
+body > header {
+  width: 100%;
+  height: 13%;
+  background: var(--bs-link-color);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+body > header > h1 {
+  color: #ffffff;
+  font-weight: 700;
+  font-family: Roboto,Helvetica Neue,Helvetica,Arial,sans-serif;
+}
+
+body > footer {
+  width: 100%;
+  height: 10%;
+  position: absolute;
+  bottom: 0;
+  background: var(--bs-gray-600);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+body > footer > a {
+  margin-left: 10px;
+  color: var(--bs-indigo);
+}
+
+body > .root {
+  width: 100%;
+  height: 87%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.root > .content-box {
+  width: 70%;
+  min-height: 50%;
+  margin-top: 5%;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+}
+
+.root > .content-box > #operate-box {
+  width: calc(50% - 5px);
+  white-space: nowrap;
+}
+
+.root > .content-box > #log-box {
+  width: calc(50% - 5px);
+  height: 100%;
+  max-height: 50vh;
+  margin-right: 10px;
+  background: #efefef;
+  overflow-y: scroll;
+}
+
+.content-box > #log-box > .line {
+  display: flex;
+  width: 100%;
+  min-height: 20px;
+}
+
+.content-box > #log-box > .line > .log-time {
+  width: 95px;
+  height: 100%;;
+}
+
+.content-box > #log-box > .line > .log-content {
+  width: calc(100% - 95px);
+  height: 100%;
+  display: flex;
+  align-items: center;
+}
+
+#loading {
+  width: 50px;
+  height: 50px;
+  position: absolute;
+  top: calc(50% - 15px);
+  left: calc(50% - 25px);
+  border: 4px solid var(--bs-link-color);
+  border-top-color: transparent;
+  border-radius: 100%;
+  animation: circle infinite 0.75s linear;
+}
+
+@keyframes circle {
+  0% {
+    transform: rotate(0);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.col-form-label {
+  text-align: center;
+  color: var(--bs-link-color);
+}
+
+.nav-tabs {
+  margin-bottom: 10px
+}
+
+.file-font {
+  color: #717070;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+#format-convert [name$='content'] {
+  opacity: .4;
+}
+
+@media
+screen and (orientation:portrait) and (max-device-width:600px) and (max-device-height:800px),
+screen and (orientation:landscape) and (max-device-width:800px) and (max-device-height:600px) {
+  body > footer {
+    display: none;
+  }
+
+  .root > .content-box {
+    width: 100%;
+    height: 100%;
+    margin-top: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    overflow-y: auto;
+  }
+
+  .root > .content-box > #operate-box {
+    width: 100%;
+    height: 80%;
+    background: transparent !important;
+    box-shadow: none !important;
+    border: none !important;
+  }
+
+  .root > .content-box > #log-box {
+    width: 100%;
+    height: 30%;
+    margin-right: 0;
+  }
+
+  .col-sm-5,.col-sm-9,.content-box .form-switch {
+    display: flex;
+    justify-content: center;
+  }
+}
