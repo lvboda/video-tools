@@ -6,7 +6,7 @@ import { LOG_TYPE, pushLog } from "@/utils/log";
 import antiDebug from "@/utils/anti-debug";
 import initDOM from './init-dom';
 
-// antiDebug();
+antiDebug();
 jQuery(initDOM);
 
 async function bootstrap() {
