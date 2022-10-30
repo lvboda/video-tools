@@ -2,7 +2,7 @@ import createFileInput from "@/utils/create-file-input";
 import { writeFiles, unlink, runFFmpeg, readFile } from "@/utils/ffmpeg";
 import { LOG_TYPE, pushLog } from "@/utils/log";
 import { currentInvokeErrorQueue, invokeWithErrorHandler } from "@/utils/error";
-import createURL from "@/utils/create-URL";
+import createObjectURL from "@/utils/create-object-url";
 
 function initAdvanceDOM($: JQueryStatic) {
     const advanceFormEl = $("#advance-form");
@@ -70,7 +70,7 @@ function initAdvanceDOM($: JQueryStatic) {
         pushLog("文件处理中，请稍后...");
         const href = await invokeWithErrorHandler(async () => {
             await runFFmpeg(ffmpegArgs);
-            return createURL(readFile(outputName).buffer);
+            return createObjectURL(readFile(outputName).buffer);
         });
 
         if (!currentInvokeErrorQueue.isEmpty()) {

@@ -1,7 +1,7 @@
 import { pushLog } from "@/utils/log";
 import { createFFmpeg, fetchFile } from "@ffmpeg/ffmpeg";
 
-import createURL from "@/utils/create-URL";
+import createObjectURL from "@/utils/create-object-url";
 import { invokeWithErrorHandler, panic } from "@/utils/error";
 import { genArgsByFormatConvertData, genArgsByClipMergeData } from "@/utils/ffmpeg-params";
 
@@ -70,7 +70,7 @@ export async function formatConvert(data: FormatConvertData, files: File[]) {
 
         await runFFmpeg(genArgsByFormatConvertData(data));
 
-        return createURL(readFile(`output.${data.formatSuffix}`).buffer, files[files.length - 1].type);
+        return createObjectURL(readFile(`output.${data.formatSuffix}`).buffer, files[files.length - 1].type);
     });
 }
 
@@ -80,6 +80,6 @@ export async function clipMerge(data: ClipMergeData, files: File[]) {
 
         await runFFmpeg(genArgsByClipMergeData(data));
 
-        return createURL(readFile(`output.${data.formatSuffix}`).buffer, files[files.length - 1].type);
+        return createObjectURL(readFile(`output.${data.formatSuffix}`).buffer, files[files.length - 1].type);
     });
 }
