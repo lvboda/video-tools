@@ -13,7 +13,7 @@ let ffmpeg: null | FFmpeg = null;
 export async function loadFFmpeg() {
 
     async function fn() {
-        if (!ffmpeg) ffmpeg = createFFmpeg({ log: true, corePath: "/ffmpeg-core.js" });
+        if (!ffmpeg) ffmpeg = createFFmpeg({ corePath: "/video-tools/ffmpeg-core.js" });
         if (!ffmpeg.isLoaded()) await ffmpeg.load();
 
         ffmpeg?.setProgress((() => {
