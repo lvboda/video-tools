@@ -3,6 +3,7 @@ import { defineConfig } from "vite";
 import path from "path";
 
 export default defineConfig({
+    base: "/video-tools/",
     resolve: {
         alias: {
             "@": path.resolve(__dirname, "src"),
@@ -22,6 +23,6 @@ export default defineConfig({
             compress: {
                 drop_debugger: false,
             }
-        }
-      }    
+        },
+    }
 })

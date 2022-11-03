@@ -1,7 +1,7 @@
 import { pushLog } from "@/utils/log";
 import { createFFmpeg, fetchFile } from "@ffmpeg/ffmpeg";
 
-import createURL from "@/utils/create-URL";
+import createObjectURL from "@/utils/create-object-url";
 import { invokeWithErrorHandler, panic } from "@/utils/error";
 import { genArgsByFormatConvertData, genArgsByClipMergeData } from "@/utils/ffmpeg-params";
 
@@ -13,7 +13,7 @@ let ffmpeg: null | FFmpeg = null;
 export async function loadFFmpeg() {
 
     async function fn() {
-        if (!ffmpeg) ffmpeg = createFFmpeg({ log: true, corePath: "/ffmpeg-core.js" });
+        if (!ffmpeg) ffmpeg = createFFmpeg({ corePath: "/video-tools/ffmpeg-core.js" });
         if (!ffmpeg.isLoaded()) await ffmpeg.load();
 
         ffmpeg?.setProgress((() => {
@@ -70,7 +70,7 @@ export async function formatConvert(data: FormatConvertData, files: File[]) {
 
         await runFFmpeg(genArgsByFormatConvertData(data));
 
-        return createURL(readFile(`output.${data.formatSuffix}`).buffer, files[files.length - 1].type);
+        return createObjectURL(readFile(`output.${data.formatSuffix}`).buffer, files[files.length - 1].type);
     });
 }
 
@@ -80,6 +80,6 @@ export async function clipMerge(data: ClipMergeData, files: File[]) {
 
         await runFFmpeg(genArgsByClipMergeData(data));
 
-        return createURL(readFile(`output.${data.formatSuffix}`).buffer, files[files.length - 1].type);
+        return createObjectURL(readFile(`output.${data.formatSuffix}`).buffer, files[files.length - 1].type);
     });
 }

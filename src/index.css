@@ -70,7 +70,7 @@ body > .root {
   overflow-y: scroll;
 }
 
-.content-box > #log-box > .line {
+/* .content-box > #log-box > .line {
   display: flex;
   width: 100%;
   min-height: 20px;
@@ -86,7 +86,7 @@ body > .root {
   height: 100%;
   display: flex;
   align-items: center;
-}
+} */
 
 #loading {
   width: 50px;

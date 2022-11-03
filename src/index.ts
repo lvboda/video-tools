@@ -4,7 +4,7 @@ import "bootstrap/dist/js/bootstrap.min";
 import { loadFFmpeg } from "@/utils/ffmpeg";
 import { LOG_TYPE, pushLog } from "@/utils/log";
 import antiDebug from "@/utils/anti-debug";
-import initDOM from './init-DOM';
+import initDOM from './init-dom';
 
 antiDebug();
 jQuery(initDOM);

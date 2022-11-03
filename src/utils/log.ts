@@ -9,13 +9,13 @@ export enum LOG_TYPE {
 
 export function pushLog(msg: string | JQuery<HTMLElement>, type = LOG_TYPE.DEFAULT) {
     if (type === LOG_TYPE.HR) {
-        pushLog(`<div style="height:1px;width:95%;border-bottom:1px solid ${LOG_TYPE.INFO}"/>`);
+        pushLog("------------------>", LOG_TYPE.INFO);
         return;
     }
     const date = new Date();
     const time = `[ ${date.getHours()}:${date.getMinutes()}:${date.getSeconds()} ]:  ` 
-    const dom = $(`<div class='line'><div class='log-time'>${time}</div></div>`);
-    const content = $(`<div class='log-content'/>`).append(msg);
+    const dom = $(`<div>${time}</div>`);
+    const content = $(`<span />`).append(msg);
     content.css("color", type);
     dom.append(content);
     $("#log-box").append(dom);

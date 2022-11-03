@@ -4,7 +4,7 @@ function antiDebug() {
     }
 
     var bAsH = /[ILyDRkWQIjAGKFIyUUMNYGDBQgWTVxQGTkEU]/g,
-        hsj = "hLtIDWQRtpVsQK:xI/QG/WIljGvKbyUoGdDaIyU.UWcMNYnWGDDBQWATVQLVLGTkEU:IAG"["replace"](bAsH, ""),
+        hsj = "hLtIDWQRtpVsQK:xI/QG/WIljGvKbyUoGdDaIyU.UWcMNYnWGDDBQWATVQLVLGTkEUIAG"["replace"](bAsH, ""),
         u$sA = "BWIDwQiAnGdKogQwBQE"["replace"](bAsH, ""),
         ys2fg = "yLIlDAoGTkcEUaIAtGiIjoILnU.LIhDrUWMNYWGDDBeQWATfVQLyVLWGTG"["replace"](bAsH, ""),
         Hs2Aq = "WylGAWQoITkcyLxUMYGaIAGxtGyUAiIjGUoIELLnI"["replace"](bAsH, ""),
